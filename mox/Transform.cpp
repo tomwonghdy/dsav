@@ -1,0 +1,73 @@
+// Copyright (c) 2025 Tom Wong  
+// Email:  buffi@163.com
+// SPDX-License-Identifier: MIT
+// 
+// RVB website   : http://www.rvb.net.cn/
+// FFMPEG website: https://www.ffmpeg.org/
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+
+#include "stdafx.h"
+#include "Transform.h"
+
+CTransform::CTransform(void)
+{
+	m_fnSamplePass =NULL;
+}
+
+CTransform::~CTransform(void)
+{
+}
+
+
+MxDescriptor* CTransform::DuplicateDescriptor(MxDescriptor* pSrc, MxDescriptor* pDst)
+{
+	RV_ASSERT(pSrc);
+	if (NULL == pDst )
+	{
+		pDst =  mxCopyDescriptor(pSrc, NULL);
+		RV_ASSERT(pDst);
+	}
+	else {
+
+		if (pDst->type != pSrc->type){
+			mxDestroyDescriptor(pDst );
+			pDst =  mxCreateDescriptor(pSrc->type);
+			RV_ASSERT(pDst);
+		}
+
+		mxCopyDescriptor(pSrc, pDst);
+
+	}
+
+	return pDst;
+
+}
+
+
+void   CTransform::SetSamplePassHandler(MO_SAMPLE_PASS_FUNC pfnSamplePass )
+{
+	m_fnSamplePass = pfnSamplePass;
+}
+
+
+MO_SAMPLE_PASS_FUNC CTransform::GetSamplePassHandler()
+{
+	return m_fnSamplePass;
+}
